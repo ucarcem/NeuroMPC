@@ -30,7 +30,13 @@ This repository is built to benchmark and evaluate two core hypotheses:
 
 ## Mathematical Foundations
 
-### 1. Non-linear Cart-Pole Dynamics
+### 1. Non-linear Inverted Pendulum Dynamics
+
+
+<img width="550" height="384" alt="image" src="https://github.com/user-attachments/assets/4d8e9729-1336-4cc4-9b5b-61ddeb36d449" />
+
+*Figure 1: An Example of Inverted Pendulum*
+
 The system state vector is defined as $x = [p, \dot{p}, \theta, \dot{\theta}]^T$ and the control input $u = F$.
 
 The equations of motion derived via Euler-Lagrange mechanics:
