@@ -86,3 +86,27 @@ $$
 $$
 \mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_{\text{phys}} \mathcal{L}_{\text{phys}}
 $$
+
+---
+
+## Controller Design & Surrogate Policy Distillation
+
+### 1. Implicit Online MPC Optimization
+The reference online controller minimizes a cost function over prediction horizon $H$:
+
+$$\min_{u_{k:k+H-1}} J = \sum_{j=0}^{H-1} \left( x_{k+j}^T Q x_{k+j} + u_{k+j}^T R u_{k+j} \right) + x_{k+H}^T P x_{k+H}$$
+
+$$\text{s.t.} \quad x_{j+1} = \hat{f}(x_j, u_j), \quad u_{\min} \le u_j \le u_{\max}$$
+
+### 2. Surrogate Neural MPC (Explicit Distillation)
+Offline optimal state-action pairs $(x^{(i)} \to u^{*(i)})$ are distilled into a lightweight policy network $\pi_{\theta}(x)$ instead of solving an optimization problem online at runtime:
+
+$$u_k^* = \tanh\left( W^{[2]} \cdot \tanh\left( W^{[1]} x_k + b^{[1]} \right) + b^{[2]} \right) \cdot u_{\max}$$
+
+---
+
+## Implementation Principles
+
+* All forward passes, backpropagation derivations, matrix operations, and optimizer updates are implemented from first principles using **NumPy**.
+* Manual gradient computations for fully connected layers with Tanh activations.
+* 4th order Runge-Kutta had been used for solver.
