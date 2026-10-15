@@ -59,3 +59,30 @@ $$k_2 = f\left(x_k + \frac{T_s}{2} k_1, u_k\right)$$
 $$k_3 = f\left(x_k + \frac{T_s}{2} k_2, u_k\right)$$
 $$k_4 = f\left(x_k + T_s k_3, u_k\right)$$
 $$x_{k+1} = x_k + \frac{T_s}{6} (k_1 + 2k_2 + 2k_3 + k_4)$$
+
+---
+
+## System Identification Framework
+
+### Data Generation & Excitation Signals
+To capture non-linear dynamics across the entire state space, training trajectories are collected by applying z-score normalized **Pseudo-Random Binary Signals (PRBS)** and multitone chirp excitation inputs to the RK4 cart-pole integrator.
+
+### Loss Function Formulation
+
+#### Black-Box MLP
+Optimized solely on Mean Squared Error (MSE) between true next states $x_{k+1}$ and predicted states $\hat{x}_{k+1}$:
+
+$$
+\mathcal{L}_{\text{data}} = \frac{1}{N} \sum_{i=1}^{N} \left\| x_{k+1}^{(i)} - \hat{x}_{k+1}^{(i)} \right\|^2
+$$
+
+#### Physics-Informed Neural Network (PINN)
+Incorporate physical derivative residuals as a soft constraint penalty term:
+
+$$
+\mathcal{L}_{\text{phys}} = \frac{1}{N} \sum_{i=1}^{N} \left\| \frac{\hat{x}_{k+1}^{(i)} - x_k^{(i)}}{T_s} - f\left(x_k^{(i)}, u_k^{(i)}\right) \right\|^2
+$$
+
+$$
+\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_{\text{phys}} \mathcal{L}_{\text{phys}}
+$$
